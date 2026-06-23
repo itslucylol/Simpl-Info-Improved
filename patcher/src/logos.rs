@@ -3,8 +3,8 @@ use std::path::{ PathBuf };
 
 pub fn build(logos_path: Vec<PathBuf>) {
     for logo_path in logos_path {
-        println!("Processing logo file: {:?}", logo_path);
-        // Read the content of the logo file
+        let name = logo_path.file_name().unwrap().to_str().unwrap_or("Unknown");
+        println!("Processing logo file: {:?}", name);
         match fs::read_to_string(&logo_path) {
             Ok(content) => {
                 // Here you can process the content as needed

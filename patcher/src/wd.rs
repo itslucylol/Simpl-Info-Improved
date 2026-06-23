@@ -1,7 +1,7 @@
 use std::fs;
+use crate::WORKING_DIRECTORY;
 
 pub fn ensure() {
-    let path = "../dist";
-    fs::create_dir_all(path).unwrap();
-    println!("[SIM Patcher] Created Directory: {}", path);
+    fs::create_dir_all(WORKING_DIRECTORY).unwrap();
+    println!("[SIM Patcher] Created Directory: {}", WORKING_DIRECTORY);
 }

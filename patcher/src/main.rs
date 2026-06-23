@@ -2,6 +2,8 @@ mod wd;
 mod fastfetch;
 mod logos;
 
+const WORKING_DIRECTORY: &str = "../build";
+
 fn main() {
     wd::ensure();
     let logo_paths = fastfetch::logo_crawl();
