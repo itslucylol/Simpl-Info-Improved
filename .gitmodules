@@ -1,0 +1,6 @@
+[submodule "simplinfo"]
+	path = vendor/simplinfo
+	url = https://github.com/justaguy1091-bit/simplinfo
+[submodule "vendor/fastfetch"]
+	path = vendor/fastfetch
+	url = https://github.com/fastfetch-cli/fastfetch.git
