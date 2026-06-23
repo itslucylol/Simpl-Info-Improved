@@ -6,4 +6,5 @@ const SIMPLINFO_PATH: &str = "../vendor/simplinfo/simplinfo LE";
 pub fn patch() {
     wd::cp(SIMPLINFO_PATH, Some("sim"));
     patches::header::main();
+    patches::display::main();
 }
