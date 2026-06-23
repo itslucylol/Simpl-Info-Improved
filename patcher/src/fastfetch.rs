@@ -39,7 +39,7 @@ pub fn logo_crawl() -> io::Result<Vec<PathBuf>> {
 #[derive(Debug)]
 #[derive(Clone)]
 pub struct DistroConfig {
-    pub names: Vec<String>,
+    pub _names: Vec<String>,
     pub colors: Vec<String>,
 }
 
@@ -94,7 +94,7 @@ pub fn parse_builtin_inc(content: &str) -> HashMap<String, DistroConfig> {
         // 3. Save it to our map
         if !names.is_empty() {
             let primary_key = names[0].to_lowercase();
-            map.insert(primary_key, DistroConfig { names, colors });
+            map.insert(primary_key, DistroConfig { _names: names, colors });
         }
     }
 

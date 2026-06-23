@@ -44,9 +44,12 @@ pub fn logo_to_bash(file_name: &str, content: &str, master_configs: &HashMap<Str
         .trim()
         .to_string();
 
-    let safe_var_name = lookup_key
+    let safe_var_name = file_name
+        .to_lowercase()
+        .replace(".txt", "")
         .replace("-", "_")
         .replace(" ", "_")
+        .trim()
         .to_uppercase();
 
     // 2. Fetch colors with fallbacks
