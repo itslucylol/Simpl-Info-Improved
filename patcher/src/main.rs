@@ -1,6 +1,7 @@
 mod wd;
 mod fastfetch;
 mod logos;
+mod colors;
 
 const WORKING_DIRECTORY: &str = "../build";
 

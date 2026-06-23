@@ -1,89 +1,34 @@
-use std::collections::HashMap;
-use std::fmt;
-
-/// Supported colors mimicking Fastfetch's color palette capabilities
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Color {
-    Reset,
-    Black,
-    Red,
-    Green,
-    Yellow,
-    Blue,
-    Magenta,
-    Cyan,
-    White,
-    BrightBlack,
-    BrightRed,
-    BrightGreen,
-    BrightYellow,
-    BrightBlue,
-    BrightMagenta,
-    BrightCyan,
-    BrightWhite,
-}
-
-impl Color {
-    /// Returns the raw ANSI escape sequence string for the terminal
-    pub fn to_ansi(self) -> &'static str {
-        match self {
-            Color::Reset => "\x1b[0m",
-            Color::Black => "\x1b[0;30m",
-            Color::Red => "\x1b[0;31m",
-            Color::Green => "\x1b[0;32m",
-            Color::Yellow => "\x1b[0;33m",
-            Color::Blue => "\x1b[0;34m",
-            Color::Magenta => "\x1b[0;35m",
-            Color::Cyan => "\x1b[0;36m",
-            Color::White => "\x1b[0;37m",
-            Color::BrightBlack => "\x1b[1;30m",
-            Color::BrightRed => "\x1b[1;31m",
-            Color::BrightGreen => "\x1b[1;32m",
-            Color::BrightYellow => "\x1b[1;33m",
-            Color::BrightBlue => "\x1b[1;34m",
-            Color::BrightMagenta => "\x1b[1;35m",
-            Color::BrightCyan => "\x1b[1;36m",
-            Color::BrightWhite => "\x1b[1;37m",
-        }
+pub fn match_macro_to_ansi(token: &str) -> String {
+    let t = token.trim();
+    
+    // 1. TrueColor RGB (e.g., "RGB 41;19;182")
+    if t.starts_with("RGB ") {
+        let rgb_values = t.trim_start_matches("RGB ").trim();
+        return format!("\x1b[38;2;{}m", rgb_values);
     }
-}
-
-// Allows printing the color directly: println!("{}", Color::Cyan);
-impl fmt::Display for Color {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_ansi())
-    }
-}
-
-/// Helper block to parse Fastfetch text tokens like "{#cyan}" or "{#34}"
-pub struct ColorManager {
-    token_map: HashMap<String, Color>,
-}
-
-impl ColorManager {
-    pub fn new() -> Self {
-        let mut token_map = HashMap::new();
-        
-        // Map common Fastfetch-style text names to our enum entries
-        let colors = vec![
-            ("black", Color::Black), ("red", Color::Red), ("green", Color::Green),
-            ("yellow", Color::Yellow), ("blue", Color::Blue), ("magenta", Color::Magenta),
-            ("cyan", Color::Cyan), ("white", Color::White),
-            ("bright_black", Color::BrightBlack), ("bright_red", Color::BrightRed),
-            ("bright_green", Color::BrightGreen), ("bright_yellow", Color::BrightYellow),
-            ("bright_blue", Color::BrightBlue), ("bright_magenta", Color::BrightMagenta),
-            ("bright_cyan", Color::BrightCyan), ("bright_white", Color::BrightWhite),
-        ];
-
-        for (name, color) in colors {
-            token_map.insert(name.to_string(), color);
-        }
-
-        ColorManager { token_map }
+    
+    // 2. 256 Color Mode (e.g., "256 225")
+    if t.starts_with("256 ") {
+        let color_index = t.trim_start_matches("256 ").trim();
+        return format!("\x1b[38;5;{}m", color_index);
     }
 
-    /// Convert a string name/token to an actual executable color
-    pub fn get_color(&self, token: &str) -> Color {
-        self.token_map.get(token).cloned().unwrap_or(Color::Reset)
+    // 3. Standard ANSI Colors (Using direct \x1b byte escapes)
+    match t {
+        "BLUE" => "\x1b[0;34m".to_string(),
+        "LIGHT_BLUE" => "\x1b[1;34m".to_string(),
+        "GREEN" => "\x1b[0;32m".to_string(),
+        "LIGHT_GREEN" => "\x1b[1;32m".to_string(),
+        "RED" => "\x1b[0;31m".to_string(),
+        "LIGHT_RED" => "\x1b[1;31m".to_string(),
+        "YELLOW" => "\x1b[0;33m".to_string(),
+        "LIGHT_YELLOW" => "\x1b[1;33m".to_string(),
+        "CYAN" => "\x1b[0;36m".to_string(),
+        "LIGHT_CYAN" => "\x1b[1;36m".to_string(),
+        "MAGENTA" => "\x1b[0;35m".to_string(),
+        "BLACK" => "\x1b[0;30m".to_string(),
+        "LIGHT_BLACK" => "\x1b[1;30m".to_string(),
+        "WHITE" => "\x1b[0;37m".to_string(),
+        _ => "\x1b[0m".to_string(),
     }
 }
